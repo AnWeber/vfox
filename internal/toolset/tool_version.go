@@ -18,6 +18,7 @@ package toolset
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 )
 
@@ -61,7 +62,11 @@ type ToolVersion struct {
 }
 
 func NewToolVersion(dirPath string) (*ToolVersion, error) {
-	file := filepath.Join(dirPath, filename)
+	toolVersionsFilename := os.Getenv("VFOX_DEFAULT_TOOL_VERSIONS_FILENAME")
+	if toolVersionsFilename == "" {
+		toolVersionsFilename = filename
+	}
+	file := filepath.Join(dirPath, toolVersionsFilename)
 	mapFile, err := NewFileRecord(file)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read tool versions file %s: %w", file, err)
